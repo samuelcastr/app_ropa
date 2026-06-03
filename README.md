@@ -42,7 +42,7 @@ El sistema de generación de outfits utiliza reglas como:
 
 ## 🏗️ Arquitectura del proyecto
 
-
+```plaintext
 lib/
 ├── models/
 │   ├── garment.dart
@@ -72,7 +72,7 @@ lib/
 │
 └── widgets/
 
-
+```
 
 
 ## 🗄️ Base de datos (SQLite)
