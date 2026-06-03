@@ -42,40 +42,38 @@ El sistema de generación de outfits utiliza reglas como:
 
 ## 🏗️ Arquitectura del proyecto
 
----
 
 lib/
-│
 ├── models/
-│ ├── garment.dart
-│ ├── outfit.dart
-│ ├── outfit_usage.dart
-│ ├── weather_type.dart
-│ └── outfit_request.dart
+│   ├── garment.dart
+│   ├── outfit.dart
+│   ├── outfit_usage.dart
+│   ├── weather_type.dart
+│   └── outfit_request.dart
 │
 ├── db/
-│ └── database_helper.dart
+│   └── database_helper.dart
 │
 ├── repositories/
-│ ├── garment_repository.dart
-│ ├── outfit_repository.dart
-│ └── outfit_usage_repository.dart
+│   ├── garment_repository.dart
+│   ├── outfit_repository.dart
+│   └── outfit_usage_repository.dart
 │
 ├── providers/
-│ ├── garment_provider.dart
-│ └── outfit_provider.dart
+│   ├── garment_provider.dart
+│   └── outfit_provider.dart
 │
 ├── services/
-│ └── outfit_generator_service.dart
+│   └── outfit_generator_service.dart
 │
 ├── screens/
-│ ├── garments/
-│ └── outfits/
+│   ├── garments/
+│   └── outfits/
 │
 └── widgets/
 
 
----
+
 
 ## 🗄️ Base de datos (SQLite)
 
