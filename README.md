@@ -42,6 +42,7 @@ El sistema de generación de outfits utiliza reglas como:
 
 ## 🏗️ Arquitectura del proyecto
 
+---
 
 lib/
 │
