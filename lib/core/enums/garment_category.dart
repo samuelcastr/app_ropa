@@ -1,0 +1,16 @@
+enum GarmentCategory {
+  blouse,
+  shirt,
+  tshirt,
+  hoodie,
+  blazer,
+  jacket,
+  jeans,
+  pants,
+  skirt,
+  dress,
+  sneakers,
+  boots,
+  sandals,
+  accessory,
+}
