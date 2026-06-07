@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,181 +11,461 @@ import '../../providers/garment_provider.dart';
 import '../../providers/outfit_provider.dart';
 import '../../services/outfit_generator_service.dart';
 import 'outfit_history_screen.dart';
+import 'saved_outfits_screen.dart';
+
 
 class OutfitGeneratorScreen extends StatefulWidget {
   const OutfitGeneratorScreen({super.key});
 
   @override
-  State<OutfitGeneratorScreen> createState() => _OutfitGeneratorScreenState();
+  State<OutfitGeneratorScreen> createState() =>
+      _OutfitGeneratorScreenState();
 }
 
-class _OutfitGeneratorScreenState extends State<OutfitGeneratorScreen> {
-  final OutfitGeneratorService _generator = OutfitGeneratorService();
+class _OutfitGeneratorScreenState
+    extends State<OutfitGeneratorScreen> {
+  final OutfitGeneratorService _generator =
+      OutfitGeneratorService();
 
   List<Garment> _outfit = [];
 
   String _occasion = 'Universidad';
 
-  WeatherType _weather = WeatherType.sunny;
+  WeatherType _weather =
+      WeatherType.sunny;
+
+  String _season =
+      'Todo el año';
 
   @override
   Widget build(BuildContext context) {
-    final garments = context.watch<GarmentProvider>().garments;
+    final garments =
+        context.watch<GarmentProvider>().garments;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Generador de Outfit'),
+        title: const Text(
+          'Generador de Outfit',
+        ),
 
         actions: [
           IconButton(
-            icon: const Icon(Icons.history),
-
+            icon: const Icon(
+              Icons.bookmark,
+            ),
+            tooltip:
+                'Outfits guardados',
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const OutfitHistoryScreen()),
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const SavedOutfitsScreen(),
+                ),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(
+              Icons.history,
+            ),
+            tooltip: 'Historial',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const OutfitHistoryScreen(),
+                ),
               );
             },
           ),
         ],
       ),
+
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding:
+            const EdgeInsets.all(16),
+
         child: Column(
           children: [
-            DropdownButtonFormField<String>(
-              initialValue: _occasion,
-              decoration: const InputDecoration(
-                labelText: 'Ocasión',
-                border: OutlineInputBorder(),
+            DropdownButtonFormField<
+                String>(
+              initialValue:
+                  _occasion,
+
+              decoration:
+                  const InputDecoration(
+                labelText:
+                    'Ocasión',
+                border:
+                    OutlineInputBorder(),
               ),
+
               items: const [
                 DropdownMenuItem(
-                  value: 'Universidad',
-                  child: Text('Universidad'),
+                  value:
+                      'Universidad',
+                  child: Text(
+                    'Universidad',
+                  ),
                 ),
+
                 DropdownMenuItem(
-                  value: 'Presentación',
-                  child: Text('Presentación'),
+                  value:
+                      'Presentación',
+                  child: Text(
+                    'Presentación',
+                  ),
                 ),
+
                 DropdownMenuItem(
-                  value: 'Evento Académico',
-                  child: Text('Evento Académico'),
+                  value:
+                      'Evento Académico',
+                  child: Text(
+                    'Evento Académico',
+                  ),
                 ),
+
                 DropdownMenuItem(
-                  value: 'Salida Casual',
-                  child: Text('Salida Casual'),
+                  value:
+                      'Salida Casual',
+                  child: Text(
+                    'Salida Casual',
+                  ),
                 ),
               ],
+
               onChanged: (value) {
                 if (value == null) {
                   return;
                 }
 
                 setState(() {
-                  _occasion = value;
+                  _occasion =
+                      value;
                 });
               },
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(
+              height: 16,
+            ),
 
-            DropdownButtonFormField<WeatherType>(
-              initialValue: _weather,
-              decoration: const InputDecoration(
-                labelText: 'Clima',
-                border: OutlineInputBorder(),
+            DropdownButtonFormField<
+                WeatherType>(
+              initialValue:
+                  _weather,
+
+              decoration:
+                  const InputDecoration(
+                labelText:
+                    'Clima',
+                border:
+                    OutlineInputBorder(),
               ),
-              items: WeatherType.values.map((weather) {
-                return DropdownMenuItem(
-                  value: weather,
-                  child: Text(weather.name),
-                );
-              }).toList(),
+
+              items:
+                  WeatherType
+                      .values
+                      .map(
+                (weather) {
+                  return DropdownMenuItem(
+                    value:
+                        weather,
+                    child: Text(
+                      weather.name,
+                    ),
+                  );
+                },
+              ).toList(),
+
               onChanged: (value) {
                 if (value == null) {
                   return;
                 }
 
                 setState(() {
-                  _weather = value;
+                  _weather =
+                      value;
                 });
               },
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(
+              height: 16,
+            ),
+
+            DropdownButtonFormField<
+                String>(
+              initialValue:
+                  _season,
+
+              decoration:
+                  const InputDecoration(
+                labelText:
+                    'Temporada',
+                border:
+                    OutlineInputBorder(),
+              ),
+
+              items: const [
+                DropdownMenuItem(
+                  value:
+                      'Todo el año',
+                  child: Text(
+                    'Todo el año',
+                  ),
+                ),
+
+                DropdownMenuItem(
+                  value:
+                      'Verano',
+                  child: Text(
+                    'Verano',
+                  ),
+                ),
+
+                DropdownMenuItem(
+                  value:
+                      'Invierno',
+                  child: Text(
+                    'Invierno',
+                  ),
+                ),
+
+                DropdownMenuItem(
+                  value:
+                      'Primavera',
+                  child: Text(
+                    'Primavera',
+                  ),
+                ),
+
+                DropdownMenuItem(
+                  value:
+                      'Otoño',
+                  child: Text(
+                    'Otoño',
+                  ),
+                ),
+              ],
+
+              onChanged: (value) {
+                if (value == null) {
+                  return;
+                }
+
+                setState(() {
+                  _season =
+                      value;
+                });
+              },
+            ),
+
+            const SizedBox(
+              height: 20,
+            ),
 
             ElevatedButton.icon(
               onPressed: () {
                 setState(() {
-                  _outfit = _generator.generateOutfit(
-                    garments: garments,
-                    request: OutfitRequest(
-                      occasion: _occasion,
-                      weather: _weather,
+                  _outfit =
+                      _generator
+                          .generateOutfit(
+                    garments:
+                        garments,
+
+                    request:
+                        OutfitRequest(
+                      occasion:
+                          _occasion,
+
+                      weather:
+                          _weather,
+
+                      season:
+                          _season,
                     ),
                   );
                 });
               },
-              icon: const Icon(Icons.auto_awesome),
-              label: const Text('Generar Outfit'),
+
+              icon: const Icon(
+                Icons.auto_awesome,
+              ),
+
+              label: const Text(
+                'Generar Outfit',
+              ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(
+              height: 12,
+            ),
 
             ElevatedButton.icon(
-              onPressed: _outfit.length < 3
-                  ? null
-                  : () async {
-                      final provider = context.read<OutfitProvider>();
+              onPressed:
+                  _outfit.length < 3
+                      ? null
+                      : () async {
+                          final provider =
+                              context.read<
+                                  OutfitProvider>();
 
-                      final messenger = ScaffoldMessenger.of(context);
+                          final messenger =
+                              ScaffoldMessenger.of(
+                            context,
+                          );
 
-                      final outfit = Outfit(
-                        name:
-                            'Outfit ${DateTime.now().day}/${DateTime.now().month}',
-                        topId: _outfit[0].id,
-                        bottomId: _outfit[1].id,
-                        shoesId: _outfit[2].id,
-                        createdAt: DateTime.now().toIso8601String(),
-                      );
+                          final outfit =
+                              Outfit(
+                            name:
+                                'Outfit ${DateTime.now().day}/${DateTime.now().month}',
 
-                      await provider.addOutfit(outfit);
+                            topId:
+                                _outfit[0]
+                                    .id,
 
-                      if (!mounted) return;
-                      messenger.showSnackBar(
-                        const SnackBar(
-                          content: Text('Outfit guardado correctamente'),
-                        ),
-                      );
-                    },
-              icon: const Icon(Icons.favorite),
-              label: const Text('Guardar Outfit'),
+                            bottomId:
+                                _outfit[1]
+                                    .id,
+
+                            shoesId:
+                                _outfit[2]
+                                    .id,
+
+                            createdAt:
+                                DateTime.now()
+                                    .toIso8601String(),
+                          );
+
+                          await provider
+                              .addOutfit(
+                            outfit,
+                          );
+
+                          if (!mounted) {
+                            return;
+                          }
+
+                          messenger
+                              .showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Outfit guardado correctamente',
+                              ),
+                            ),
+                          );
+                        },
+
+              icon: const Icon(
+                Icons.favorite,
+              ),
+
+              label: const Text(
+                'Guardar Outfit',
+              ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(
+              height: 20,
+            ),
 
             Expanded(
-              child: _outfit.isEmpty
-                  ? const Center(
-                      child: Text('Genera un outfit para visualizarlo'),
-                    )
-                  : ListView.builder(
-                      itemCount: _outfit.length,
-                      itemBuilder: (context, index) {
-                        final garment = _outfit[index];
-
-                        return Card(
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            leading: const Icon(Icons.checkroom),
-                            title: Text(garment.name),
-                            subtitle: Text(garment.category),
+              child:
+                  _outfit.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Genera un outfit para visualizarlo',
                           ),
-                        );
-                      },
-                    ),
+                        )
+                      : ListView.builder(
+                          itemCount:
+                              _outfit
+                                  .length,
+
+                          itemBuilder:
+                              (
+                            context,
+                            index,
+                          ) {
+                            final garment =
+                                _outfit[
+                                    index];
+
+                            return Card(
+                              elevation:
+                                  4,
+
+                              margin:
+                                  const EdgeInsets.symmetric(
+                                vertical:
+                                    8,
+                              ),
+
+                              shape:
+                                  RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(
+                                  16,
+                                ),
+                              ),
+
+                              child:
+                                  ListTile(
+                                leading:
+                                    garment.imagePath !=
+                                            null
+                                        ? CircleAvatar(
+                                            radius:
+                                                28,
+                                            backgroundImage:
+                                                FileImage(
+                                              File(
+                                                garment.imagePath!,
+                                              ),
+                                            ),
+                                          )
+                                        : const CircleAvatar(
+                                            radius:
+                                                28,
+                                            child:
+                                                Icon(
+                                              Icons.checkroom,
+                                            ),
+                                          ),
+
+                                title:
+                                    Text(
+                                  garment
+                                      .name,
+
+                                  style:
+                                      const TextStyle(
+                                    fontWeight:
+                                        FontWeight.bold,
+                                  ),
+                                ),
+
+                                subtitle:
+                                    Text(
+                                  '${garment.category} • ${garment.color}',
+                                ),
+
+                                trailing:
+                                    garment.isFavorite
+                                        ? const Icon(
+                                            Icons.favorite,
+                                            color:
+                                                Colors.red,
+                                          )
+                                        : null,
+                              ),
+                            );
+                          },
+                        ),
             ),
           ],
         ),

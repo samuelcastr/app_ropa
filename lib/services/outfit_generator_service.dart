@@ -3,6 +3,60 @@ import '../models/outfit_request.dart';
 import '../models/weather_type.dart';
 
 class OutfitGeneratorService {
+
+  int calculateScore(
+    Garment garment,
+    OutfitRequest request,
+  ) {
+    int score = 0;
+
+    // Favoritas
+    if (garment.isFavorite) {
+      score += 30;
+    }
+
+    // Coincidencia de ocasión
+    if (garment.occasion ==
+        request.occasion) {
+      score += 25;
+    }
+
+    // Coincidencia de temporada
+    if (garment.season ==
+            request.season ||
+        garment.season ==
+            'Todo el año') {
+      score += 15;
+    }
+
+    // Nunca usada
+    if (garment.lastWorn == null) {
+      score += 20;
+    }
+
+    return score;
+  }
+
+  Garment getBestGarment(
+    List<Garment> garments,
+    OutfitRequest request,
+  ) {
+    garments.sort(
+      (a, b) =>
+          calculateScore(
+            b,
+            request,
+          ).compareTo(
+            calculateScore(
+              a,
+              request,
+            ),
+          ),
+    );
+
+    return garments.first;
+  }
+
   List<Garment> generateOutfit({
     required List<Garment> garments,
     required OutfitRequest request,
@@ -11,38 +65,38 @@ class OutfitGeneratorService {
       return [];
     }
 
-    final available = List<Garment>.from(garments);
-
-    // Priorizar favoritos
-    available.sort((a, b) {
-      if (a.isFavorite && !b.isFavorite) {
-        return -1;
-      }
-
-      if (!a.isFavorite && b.isFavorite) {
-        return 1;
-      }
-
-      return 0;
-    });
+    final available =
+        List<Garment>.from(
+      garments,
+    );
 
     // TOPS
-    final tops = available.where((g) {
-      return g.category == 'Blusa' ||
-          g.category == 'Camiseta' ||
-          g.category == 'Chaqueta';
+    final tops =
+        available.where((g) {
+      return g.category ==
+              'Blusa' ||
+          g.category ==
+              'Camiseta' ||
+          g.category ==
+              'Chaqueta';
     }).toList();
 
     // BOTTOMS
-    final bottoms = available.where((g) {
-      return g.category == 'Jean' ||
-          g.category == 'Falda';
+    final bottoms =
+        available.where((g) {
+      return g.category ==
+              'Jean' ||
+          g.category ==
+              'Falda';
     }).toList();
 
     // SHOES
-    final shoes = available.where((g) {
-      return g.category == 'Tenis' ||
-          g.category == 'Botas';
+    final shoes =
+        available.where((g) {
+      return g.category ==
+              'Tenis' ||
+          g.category ==
+              'Botas';
     }).toList();
 
     if (tops.isEmpty ||
@@ -51,30 +105,62 @@ class OutfitGeneratorService {
       return [];
     }
 
-    Garment selectedTop = tops.first;
-    Garment selectedBottom = bottoms.first;
-    Garment selectedShoes = shoes.first;
+    // Selección inteligente
+    Garment selectedTop =
+        getBestGarment(
+      tops,
+      request,
+    );
 
-    // Reglas por clima
+    Garment selectedBottom =
+        getBestGarment(
+      bottoms,
+      request,
+    );
+
+    Garment selectedShoes =
+        getBestGarment(
+      shoes,
+      request,
+    );
+
+    // Ajustes por clima
     switch (request.weather) {
       case WeatherType.rainy:
-        final rainyShoes = shoes.where(
-          (g) => g.category == 'Botas',
+
+        final rainyShoes =
+            shoes.where(
+          (g) =>
+              g.category ==
+              'Botas',
         );
 
-        if (rainyShoes.isNotEmpty) {
-          selectedShoes = rainyShoes.first;
+        if (rainyShoes
+            .isNotEmpty) {
+          selectedShoes =
+              rainyShoes.first;
         }
+
         break;
 
       case WeatherType.cold:
-        final jackets = tops.where(
-          (g) => g.category == 'Chaqueta',
+
+        final jackets =
+            tops.where(
+          (g) =>
+              g.category ==
+              'Chaqueta',
         );
 
-        if (jackets.isNotEmpty) {
-          selectedTop = jackets.first;
+        if (jackets
+            .isNotEmpty) {
+          selectedTop =
+              getBestGarment(
+            jackets.toList(),
+            request,
+          );
         }
+
         break;
 
       case WeatherType.sunny:
@@ -82,44 +168,65 @@ class OutfitGeneratorService {
         break;
     }
 
-    // Reglas por ocasión
+    // Ajustes por ocasión
     switch (request.occasion) {
       case 'Presentación':
-        final elegantTop = tops.where(
+
+        final elegantTop =
+            tops.where(
           (g) =>
-              g.category == 'Blusa',
+              g.category ==
+              'Blusa',
         );
 
-        if (elegantTop.isNotEmpty) {
-          selectedTop = elegantTop.first;
+        if (elegantTop
+            .isNotEmpty) {
+          selectedTop =
+              getBestGarment(
+            elegantTop
+                .toList(),
+            request,
+          );
         }
 
         break;
 
       case 'Evento Académico':
-        final jackets = tops.where(
+
+        final jackets =
+            tops.where(
           (g) =>
               g.category ==
               'Chaqueta',
         );
 
-        if (jackets.isNotEmpty) {
+        if (jackets
+            .isNotEmpty) {
           selectedTop =
-              jackets.first;
+              getBestGarment(
+            jackets.toList(),
+            request,
+          );
         }
 
         break;
 
       case 'Salida Casual':
-        final tshirts = tops.where(
+
+        final tshirts =
+            tops.where(
           (g) =>
               g.category ==
               'Camiseta',
         );
 
-        if (tshirts.isNotEmpty) {
+        if (tshirts
+            .isNotEmpty) {
           selectedTop =
-              tshirts.first;
+              getBestGarment(
+            tshirts.toList(),
+            request,
+          );
         }
 
         break;

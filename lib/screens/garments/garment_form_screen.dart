@@ -11,22 +11,17 @@ class GarmentFormScreen extends StatefulWidget {
   const GarmentFormScreen({super.key});
 
   @override
-  State<GarmentFormScreen> createState() =>
-      _GarmentFormScreenState();
+  State<GarmentFormScreen> createState() => _GarmentFormScreenState();
 }
 
-class _GarmentFormScreenState
-    extends State<GarmentFormScreen> {
+class _GarmentFormScreenState extends State<GarmentFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _nameController =
-      TextEditingController();
+  final _nameController = TextEditingController();
 
-  final _brandController =
-      TextEditingController();
+  final _brandController = TextEditingController();
 
-  final ImageService _imageService =
-      ImageService();
+  final ImageService _imageService = ImageService();
 
   String? _imagePath;
 
@@ -47,11 +42,7 @@ class _GarmentFormScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Nueva Prenda',
-        ),
-      ),
+      appBar: AppBar(title: const Text('Nueva Prenda')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -63,38 +54,59 @@ class _GarmentFormScreenState
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage:
-                          _imagePath != null
-                              ? FileImage(
-                                  File(
-                                    _imagePath!,
-                                  ),
-                                )
-                              : null,
+                      backgroundImage: _imagePath != null
+                          ? FileImage(File(_imagePath!))
+                          : null,
                       child: _imagePath == null
-                          ? const Icon(
-                              Icons.image,
-                              size: 40,
-                            )
+                          ? const Icon(Icons.image, size: 40)
                           : null,
                     ),
-                    TextButton(
-                      onPressed: () async {
-                        final image =
-                            await _imageService
-                                .pickAndSaveImage();
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.photo),
 
-                        if (image == null) {
-                          return;
-                        }
+                            label: const Text('Galería'),
 
-                        setState(() {
-                          _imagePath = image;
-                        });
-                      },
-                      child: const Text(
-                        'Seleccionar imagen',
-                      ),
+                            onPressed: () async {
+                              final image = await _imageService
+                                  .pickFromGallery();
+
+                              if (image == null) {
+                                return;
+                              }
+
+                              setState(() {
+                                _imagePath = image;
+                              });
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.camera_alt),
+
+                            label: const Text('Cámara'),
+
+                            onPressed: () async {
+                              final image = await _imageService
+                                  .pickFromCamera();
+
+                              if (image == null) {
+                                return;
+                              }
+
+                              setState(() {
+                                _imagePath = image;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -103,18 +115,13 @@ class _GarmentFormScreenState
               const SizedBox(height: 20),
 
               TextFormField(
-                controller:
-                    _nameController,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Nombre de la prenda',
-                  border:
-                      OutlineInputBorder(),
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre de la prenda',
+                  border: OutlineInputBorder(),
                 ),
                 validator: (value) {
-                  if (value == null ||
-                      value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'Ingrese un nombre';
                   }
 
@@ -125,13 +132,10 @@ class _GarmentFormScreenState
               const SizedBox(height: 16),
 
               TextFormField(
-                controller:
-                    _brandController,
-                decoration:
-                    const InputDecoration(
+                controller: _brandController,
+                decoration: const InputDecoration(
                   labelText: 'Marca',
-                  border:
-                      OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                 ),
               ),
 
@@ -139,74 +143,27 @@ class _GarmentFormScreenState
 
               DropdownButtonFormField<String>(
                 initialValue: _category,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Categoría',
-                  border:
-                      OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  labelText: 'Categoría',
+                  border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(
-                    value: 'Blusa',
-                    child:
-                        Text('Blusa'),
-                  ),
-                  DropdownMenuItem(
-                    value:
-                        'Camiseta',
-                    child: Text(
-                      'Camiseta',
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Jean',
-                    child:
-                        Text('Jean'),
-                  ),
-                  DropdownMenuItem(
-                    value:
-                        'Falda',
-                    child:
-                        Text('Falda'),
-                  ),
-                  DropdownMenuItem(
-                    value:
-                        'Vestido',
-                    child: Text(
-                      'Vestido',
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value:
-                        'Chaqueta',
-                    child: Text(
-                      'Chaqueta',
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value:
-                        'Tenis',
-                    child:
-                        Text('Tenis'),
-                  ),
-                  DropdownMenuItem(
-                    value:
-                        'Botas',
-                    child:
-                        Text('Botas'),
-                  ),
+                  DropdownMenuItem(value: 'Blusa', child: Text('Blusa')),
+                  DropdownMenuItem(value: 'Camiseta', child: Text('Camiseta')),
+                  DropdownMenuItem(value: 'Jean', child: Text('Jean')),
+                  DropdownMenuItem(value: 'Falda', child: Text('Falda')),
+                  DropdownMenuItem(value: 'Vestido', child: Text('Vestido')),
+                  DropdownMenuItem(value: 'Chaqueta', child: Text('Chaqueta')),
+                  DropdownMenuItem(value: 'Tenis', child: Text('Tenis')),
+                  DropdownMenuItem(value: 'Botas', child: Text('Botas')),
                 ],
-                onChanged: (
-                  value,
-                ) {
+                onChanged: (value) {
                   if (value == null) {
                     return;
                   }
 
                   setState(() {
-                    _category =
-                        value;
+                    _category = value;
                   });
                 },
               ),
@@ -215,14 +172,9 @@ class _GarmentFormScreenState
 
               SizedBox(
                 height: 50,
-                child:
-                    ElevatedButton(
-                  onPressed:
-                      _saveGarment,
-                  child:
-                      const Text(
-                    'Guardar',
-                  ),
+                child: ElevatedButton(
+                  onPressed: _saveGarment,
+                  child: const Text('Guardar'),
                 ),
               ),
             ],
@@ -233,34 +185,25 @@ class _GarmentFormScreenState
   }
 
   Future<void> _saveGarment() async {
-    if (!_formKey.currentState!
-        .validate()) {
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
     final garment = Garment(
-      name:
-          _nameController.text,
+      name: _nameController.text,
       category: _category,
       color: _color,
       size: _size,
-      brand:
-          _brandController.text,
+      brand: _brandController.text,
       season: _season,
       occasion: _occasion,
       imagePath: _imagePath,
       isFavorite: false,
       lastWorn: null,
-      createdAt:
-          DateTime.now()
-              .toIso8601String(),
+      createdAt: DateTime.now().toIso8601String(),
     );
 
-    await context
-        .read<GarmentProvider>()
-        .addGarment(
-          garment,
-        );
+    await context.read<GarmentProvider>().addGarment(garment);
 
     if (!mounted) {
       return;

@@ -7,7 +7,7 @@ import 'providers/garment_provider.dart';
 import 'providers/outfit_provider.dart';
 import 'providers/outfit_usage_provider.dart';
 
-import 'screens/garments/garment_list_screen.dart';
+import 'screens/navigation/main_navigation_screen.dart';
 
 class ClosetAIApp extends StatelessWidget {
   const ClosetAIApp({super.key});
@@ -36,7 +36,7 @@ class ClosetAIApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Closet AI',
-        home: const GarmentListScreen(),
+        home: const MainNavigationScreen(),
       ),
     );
   }

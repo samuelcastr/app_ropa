@@ -8,7 +8,7 @@ class ImageService {
   final ImagePicker _picker =
       ImagePicker();
 
-  Future<String?> pickAndSaveImage() async {
+  Future<String?> pickFromGallery() async {
     final image =
         await _picker.pickImage(
       source: ImageSource.gallery,
@@ -19,14 +19,39 @@ class ImageService {
       return null;
     }
 
+    return saveImage(
+      File(image.path),
+    );
+  }
+
+  Future<String?> pickFromCamera() async {
+    final image =
+        await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+
+    if (image == null) {
+      return null;
+    }
+
+    return saveImage(
+      File(image.path),
+    );
+  }
+
+  Future<String> saveImage(
+    File imageFile,
+  ) async {
+
     final appDir =
         await getApplicationDocumentsDirectory();
 
     final fileName =
-        '${DateTime.now().millisecondsSinceEpoch}${extension(image.path)}';
+        basename(imageFile.path);
 
     final savedImage =
-        await File(image.path).copy(
+        await imageFile.copy(
       '${appDir.path}/$fileName',
     );
 
